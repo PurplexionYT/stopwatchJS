@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch</title>
+    <style>
+        body {
+            background: linear-gradient(to right, green, chartreuse);
+        }
+        
+        #timeDisplay {
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            color: white;
+            font-family: 'Trebuchet MS';
+            font-size: 250px;   
+            text-shadow: -2px 2px 5px black;
+        }
+        
+        .timerBtn {
+            font-family: 'Trebuchet MS';
+            font-size: 80px;
+            border-radius: 12px;
+            margin: 20px;
+            padding: 10px;
+            background-color: #ff6600;
+            appearance: none;
+            border: white 2px solid;
+            color: white;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px black;
+        }
+        
+        #buttons {
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            position: relative;
+            bottom: 30px
+        }
+        
+        #info {
+            color: white;
+            font-family: 'Trebuchet MS';
+            text-align: center;
+            text-shadow: -2px 1px 1px black;
+            font-size: 50px;
+            position: relative;
+            bottom: 70px;
+        }
+    </style>
+</head>
+<body id="body">
+    <div id="timeContainer">
+        <div id="timeDisplay">
+        <span id="demo3">00</span>:<span id="demo2">00</span>:<span id="demo">000</span> 
+        </div>
+        <br>
+        <div id="buttons">
+            <button id="startBtn" class="timerBtn" onclick="startTimer()">Start</button>
+            <button id="pauseBtn" class="timerBtn" onclick="pauseTimer()">Pause</button>
+            <button id="resetBtn" class="timerBtn" onclick="resetTimer()">Reset</button>
+        </div>
+    </div>
+    <p id="info">You can also press 's' for start, 'p' for pause, and 'r' for reset, on your keyboard.</p>
+    <script type="text/javascript">
+        function ms() { // declares function
+            document.getElementById('demo').innerHTML = parseInt(document.getElementById('demo').innerHTML) + 1 // the milliseconds digit slot will be increased by 1 every millisecond
+            if (parseInt(document.getElementById('demo').innerHTML) == 250) { // if the milliseconds slot is 250, a second has passed
+                document.getElementById('demo').innerHTML = 0 // setting milliseconds slot to 0
+                document.getElementById('demo2').innerHTML = parseInt(document.getElementById('demo2').innerHTML) + 1 // adding one to the seconds slot
+            }
+            if (parseInt(document.getElementById('demo2').innerHTML) == 60) { // if the seconds slot is 60, a minute has passed
+               document.getElementById('demo2').innerHTML = 0 // setting seconds to 0
+               document.getElementById('demo3').innerHTML = parseInt(document.getElementById('demo3').innerHTML) + 1 // adding one to the minutes slot
+           }
+           
+           function pad(unit) { // declaring new function
+               return (("0") + unit).length > 2 ? unit : "0" + unit // the unit is the element. if we add a 0 to the beginning of the element, is the length greater than 2?  if it is, return unit, it it isn't, return '0' + unit
+           }
+           
+            document.getElementById('demo3').innerHTML = pad(parseInt(document.getElementById('demo3').innerHTML)) // runs the function for the minute slot
+            document.getElementById('demo2').innerHTML = pad(parseInt(document.getElementById('demo2').innerHTML)) // runs the funtion for the seconds slot
+
+            if (parseInt(document.getElementById('demo').innerHTML) < 10 && document.getElementById('demo').innerHTML.length < 3) { // if the milliseconds is less than ten, and the length of the milliseconds is less than 3
+                document.getElementById('demo').innerHTML = "00" + parseInt(document.getElementById('demo').innerHTML) // add '00' to the start of the milliseconds slot
+            }
+            if (parseInt(document.getElementById('demo').innerHTML) < 100 && document.getElementById('demo').innerHTML.length < 3) { // if the milliseconds is less than 100, and the length of the milliseconds is less than 3
+                document.getElementById('demo').innerHTML = "0" + parseInt(document.getElementById('demo').innerHTML) // add '0' to the start of the milliseconds slot
+            }
+        }
+        
+        let everyMs; //declares the variable that is going to be holding the interval
+        let checker = 'fresh'; // declares the variable that is going to filter start and pause prompts
+        
+        function startTimer() { // function that runs whenever the user clicks the start button
+            if (checker == false || checker == 'fresh' || checker == 'reset') { // timer only starts when it is paused or has never been started
+                everyMs = setInterval(ms, 1) // giving the aforementioned variable a value; the setInterval
+                console.log('timer started')
+                checker = true // switches to true because timer has started
+            }
+        }
+        
+        function pauseTimer() { // function that runs whenever the user clicks the pause button
+            if (checker == true) { // timer only pauses when timer has started
+                clearInterval(everyMs) // stops the timer from running any longer but doesn't clear it
+                console.log('timer paused')
+                checker = false // switches to false because timer has paused
+            }
+        }
+        
+        function resetTimer() { // function that runs whenever the user clicks the reset button
+            if (checker == true || checker == false) {
+                clearInterval(everyMs) // stops the timer from running any long but doesn't clear it, yet
+                document.getElementById('demo3').innerHTML = '00' // sets the minutes to zero
+                document.getElementById('demo2').innerHTML = '00' // sets the seconds to zero
+                document.getElementById('demo').innerHTML = '000' // sets the milliseconds to zero
+                console.log('timer reset')
+                checker = 'reset'
+            }
+        }
+        
+        var input = document.getElementById('body') // when the user presses the s key, it runs the start timer function
+            input.addEventListener("keypress", function(event) {
+                if (event.key === "s") {
+                    event.preventDefault();
+                    startTimer()
+                }
+            })
+        var input = document.getElementById('body') // when the user presses the p key, it runs the pause timer function
+            input.addEventListener("keypress", function(event) {
+                if (event.key === "p") {
+                    event.preventDefault();
+                    pauseTimer()
+                }
+            })
+        var input = document.getElementById('body') // when the user presses the r key, it runs the reset timer function
+            input.addEventListener("keypress", function(event) {
+                if (event.key === "r") {
+                    event.preventDefault();
+                    resetTimer()
+                }
+            })
+            
+        </script>
+</body>
+</html>
